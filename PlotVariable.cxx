@@ -37,8 +37,7 @@ void PlotVariable (int Option,TString NameVariable, float InputStartRange, float
 
   else if (Option == 3){
     //To be modified when MC for PhiPhi
- in_file = TFile::Open("/../../lhcb/panasas/radiative/TupleProd/MC2012sim6b/2012/Bs2KstKstGamma/VVG/S20r0/Bs2KstKstGamma_2012_S20r0_VVG.root"); 
- my_tupleSignal = (TTree*) in_file->GetObjectChecked("kstkstGammaMCStrip/DecayTree","TTree");
+ in_file = TFile::Open("/../../lhcb/panasas/radiative/TupleProd/MC11a/2011/Bs2PhiPhiGamma/VVG/S20r1/Bs2PhiPhiGamma_2011_S20r1_VVG_MagUp.root"); my_tupleSignal = (TTree*) in_file->GetObjectChecked("phiphiGammaMCStrip/DecayTree","TTree");
  my_chainBkG = new TChain("phiphiGammaStrip/DecayTree");
 
   }
@@ -84,13 +83,6 @@ void PlotVariable (int Option,TString NameVariable, float InputStartRange, float
  float LowerLimit = 5099;
  float UpperLimit = 5459;
  } 
- 
- //Print only the number of entries
- gStyle->SetOptStat("");
- float NumEntriesSignal =  my_tupleSignal->GetEntries();
- cout<<"Number of entries for the Signal : "<<NumEntriesSignal<<endl;
- float NumEntriesBkG =  my_chainBkG->GetEntries();
- cout<<"Number of entries for the Background : "<<NumEntriesBkG<<endl;
  
  //Create Title for the histogramms of the considered variable
  TString TitleHisto = TString (NameVariable.Data()) + ";;";
@@ -147,45 +139,70 @@ void PlotVariable (int Option,TString NameVariable, float InputStartRange, float
  
  //Fill histogramms
 
- for (int irow=0;irow<my_tupleSignal->GetEntries();++irow){
-   my_tupleSignal->GetEntry(irow);
+ int entrySig = 0;
+ while (my_tupleSignal->GetEntry(entrySig) ){
+   
    
    if ((B_MM>LowerLimit)&&(B_MM<UpperLimit)){
-     hVariableSig->Fill(TemporaryVariable,1/NumEntriesSignal);
-     hB_MMSig->Fill(B_MM,1/NumEntriesSignal);
+     hVariableSig->Fill(TemporaryVariable);
+     hB_MMSig->Fill(B_MM);
    }
+   
+   ++entrySig ;
    
 
   }
 
- for (int irow=0;irow<my_chainBkG->GetEntries();++irow){
-   my_chainBkG->GetEntry(irow);
-   
+ int entryBkG = 0;
+ while ( my_chainBkG->GetEntry(entryBkG) ) {
+
    if(B_MM<LowerLimit){
-     hVariableLBkG->Fill(TemporaryVariable,1/NumEntriesBkG);
-     hB_MMLBkG->Fill(B_MM,1/NumEntriesBkG);
+     hVariableLBkG->Fill(TemporaryVariable);
+     hB_MMLBkG->Fill(B_MM);
    }
    
    else if(B_MM>UpperLimit){
-     hVariableHBkG->Fill(TemporaryVariable,1/NumEntriesBkG);
-     hB_MMHBkG->Fill(B_MM,1/NumEntriesBkG);
+     hVariableHBkG->Fill(TemporaryVariable);
+     hB_MMHBkG->Fill(B_MM);
    }  
+   
 
-  }
+   ++entryBkG ;
+   
+ }
+
+  
+ //Define scale factors and print entries
+
+ float NumEntriesSig = entrySig ;
+ float NumEntriesBkG = entryBkG ; 
+ 
+ cout<<"Number of entries for the Signal : "<<entrySig<<endl;
+ cout<<"Number of entries for the BkG : "<<entryBkG<<endl;
  
  //Draw histogramms
 
- TCanvas* cCanvas = new TCanvas("cCanvas","Plots",0,0,1200,650); 
+
+ TCanvas* cCanvas = new TCanvas("cCanvas","Plots",0,0,1200,650);
  cCanvas->Divide(2);
+
  cCanvas->cd(1);
+ hVariableSig->Scale(1/NumEntriesSig);
  hVariableSig->Draw();
+ hVariableLBkG->Scale(1/NumEntriesBkG);
  hVariableLBkG->Draw("same");
+ hVariableHBkG->Scale(1/NumEntriesBkG);
  hVariableHBkG->Draw("same");
+
  cCanvas->cd(2);
+ hB_MMSig->Scale(1/NumEntriesSig);
  hB_MMSig->Draw();
+ hB_MMLBkG->Scale(1/NumEntriesBkG);
  hB_MMLBkG->Draw("same");
+ hB_MMHBkG->Scale(1/NumEntriesBkG);
  hB_MMHBkG->Draw("same");
  
+
 
 
 }
