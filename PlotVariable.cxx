@@ -9,6 +9,10 @@
 #include "TTree.h"
 #include "TH1.h"
 #include "TCanvas.h"
+#include <iostream>
+#include "TStyle.h"
+using namespace std;
+
 
 void PlotVariable (int Option,TString NameVariable, float InputStartRange, float InputStopRange) {
 
@@ -26,16 +30,16 @@ void PlotVariable (int Option,TString NameVariable, float InputStartRange, float
   }
 
   else if (Option == 2){
- TFile *in_file = TFile::Open("/../../lhcb/panasas/radiative/TupleProd/MC11a/2011/Bd2PhiKstGamma/VVG/S20r1/Bd2PhiKstGamma_2011_S20r1_VVG.root"); 
- TTree* my_tupleSignal = (TTree*) in_file->GetObjectChecked("phikstGammaMCStrip/DecayTree","TTree");
- TChain *my_chainBkG = new TChain("phikstGammaStrip/DecayTree");
+ in_file = TFile::Open("/../../lhcb/panasas/radiative/TupleProd/MC11a/2011/Bd2PhiKstGamma/VVG/S20r1/Bd2PhiKstGamma_2011_S20r1_VVG.root"); 
+ my_tupleSignal = (TTree*) in_file->GetObjectChecked("phikstGammaMCStrip/DecayTree","TTree");
+ my_chainBkG = new TChain("phikstGammaStrip/DecayTree");
   }
 
   else if (Option == 3){
     //To be modified when MC for PhiPhi
- TFile *in_file = TFile::Open("/../../lhcb/panasas/radiative/TupleProd/MC2012sim6b/2012/Bs2KstKstGamma/VVG/S20r0/Bs2KstKstGamma_2012_S20r0_VVG.root"); 
- TTree* my_tupleSignal = (TTree*) in_file->GetObjectChecked("kstkstGammaMCStrip/DecayTree","TTree");
- TChain *my_chainBkG = new TChain("phiphiGammaStrip/DecayTree");
+ in_file = TFile::Open("/../../lhcb/panasas/radiative/TupleProd/MC2012sim6b/2012/Bs2KstKstGamma/VVG/S20r0/Bs2KstKstGamma_2012_S20r0_VVG.root"); 
+ my_tupleSignal = (TTree*) in_file->GetObjectChecked("kstkstGammaMCStrip/DecayTree","TTree");
+ my_chainBkG = new TChain("phiphiGammaStrip/DecayTree");
 
   }
 
@@ -73,15 +77,13 @@ void PlotVariable (int Option,TString NameVariable, float InputStartRange, float
 
  //Set Upper and Lower limit for the signal window (5186-5546 MeV for PhiPhi and KstKst(B0s Mass= 5366MeV), 5099-5459MeV for PhiKst(B0 Mass = 5279 MeV))
 
+ float LowerLimit = 5186;
+ float UpperLimit = 5546;
+
  if (Option == 2){   
  float LowerLimit = 5099;
  float UpperLimit = 5459;
- }
- else {
- float LowerLimit = 5186;
- float UpperLimit = 5546;
- }
- 
+ } 
  
  //Print only the number of entries
  gStyle->SetOptStat("");
@@ -90,27 +92,29 @@ void PlotVariable (int Option,TString NameVariable, float InputStartRange, float
  float NumEntriesBkG =  my_chainBkG->GetEntries();
  cout<<"Number of entries for the Background : "<<NumEntriesBkG<<endl;
  
+ //Create Title for the histogramms of the considered variable
+ TString TitleHisto = TString (NameVariable.Data()) + ";;";
  
 
  //Create histogramms
  
- TH1F* hB_MINIPCHI2Sig=new TH1F("B_MINIPCHI2","B_MINIPCHI2;;",
+ TH1F* hVariableSig=new TH1F(NameVariable.Data(),TitleHisto.Data(),
                         100,//Number of bins
                         InputStartRange,//Lower X Boundary
                         InputStopRange);//Upper X Boundary
- hB_MINIPCHI2Sig->SetFillColor(kBlue-6);
+ hVariableSig->SetFillColor(kBlue-6);
 
- TH1F* hB_MINIPCHI2LBkG=new TH1F("B_MINIPCHI2","B_MINIPCHI2;;",
+ TH1F* hVariableLBkG=new TH1F(NameVariable.Data(),TitleHisto.Data(),
                         100,//Number of bins
                         InputStartRange,//Lower X Boundary
                         InputStopRange);//Upper X Boundary
- hB_MINIPCHI2LBkG->SetLineColor(kGreen);
+ hVariableLBkG->SetLineColor(kGreen);
 
- TH1F* hB_MINIPCHI2HBkG=new TH1F("B_MINIPCHI2","B_MINIPCHI2;;",
+ TH1F* hVariableHBkG=new TH1F(NameVariable.Data(),TitleHisto.Data(),
                         100,//Number of bins
                         InputStartRange,//Lower X Boundary
                         InputStopRange);//Upper X Boundary
- hB_MINIPCHI2HBkG->SetLineColor(kRed);
+ hVariableHBkG->SetLineColor(kRed);
 
  TH1F* hB_MMSig=new TH1F("B_MM","Mass;Mass (GeV);",
                         100,//Number of bins
@@ -132,13 +136,13 @@ void PlotVariable (int Option,TString NameVariable, float InputStartRange, float
 
  //Read Trees
 
- double B_MINIPCHI2, B_MM;
+ double TemporaryVariable, B_MM;
  
  //Select the loaves to be read
 
- my_tupleSignal->SetBranchAddress("B_MINIPCHI2",&B_MINIPCHI2);
+ my_tupleSignal->SetBranchAddress(NameVariable.Data(),&TemporaryVariable);
  my_tupleSignal->SetBranchAddress("B_MM",&B_MM);
- my_chainBkG->SetBranchAddress("B_MINIPCHI2",&B_MINIPCHI2);
+ my_chainBkG->SetBranchAddress(NameVariable.Data(),&TemporaryVariable);
  my_chainBkG->SetBranchAddress("B_MM",&B_MM);
  
  //Fill histogramms
@@ -147,7 +151,7 @@ void PlotVariable (int Option,TString NameVariable, float InputStartRange, float
    my_tupleSignal->GetEntry(irow);
    
    if ((B_MM>LowerLimit)&&(B_MM<UpperLimit)){
-     hB_MINIPCHI2Sig->Fill(B_MINIPCHI2,1/NumEntriesSignal);
+     hVariableSig->Fill(TemporaryVariable,1/NumEntriesSignal);
      hB_MMSig->Fill(B_MM,1/NumEntriesSignal);
    }
    
@@ -158,12 +162,12 @@ void PlotVariable (int Option,TString NameVariable, float InputStartRange, float
    my_chainBkG->GetEntry(irow);
    
    if(B_MM<LowerLimit){
-     hB_MINIPCHI2LBkG->Fill(B_MINIPCHI2,1/NumEntriesBkG);
+     hVariableLBkG->Fill(TemporaryVariable,1/NumEntriesBkG);
      hB_MMLBkG->Fill(B_MM,1/NumEntriesBkG);
    }
    
    else if(B_MM>UpperLimit){
-     hB_MINIPCHI2HBkG->Fill(B_MINIPCHI2,1/NumEntriesBkG);
+     hVariableHBkG->Fill(TemporaryVariable,1/NumEntriesBkG);
      hB_MMHBkG->Fill(B_MM,1/NumEntriesBkG);
    }  
 
@@ -174,9 +178,9 @@ void PlotVariable (int Option,TString NameVariable, float InputStartRange, float
  TCanvas* cCanvas = new TCanvas("cCanvas","Plots",0,0,1200,650); 
  cCanvas->Divide(2);
  cCanvas->cd(1);
- hB_MINIPCHI2Sig->Draw();
- hB_MINIPCHI2LBkG->Draw("same");
- hB_MINIPCHI2HBkG->Draw("same");
+ hVariableSig->Draw();
+ hVariableLBkG->Draw("same");
+ hVariableHBkG->Draw("same");
  cCanvas->cd(2);
  hB_MMSig->Draw();
  hB_MMLBkG->Draw("same");
