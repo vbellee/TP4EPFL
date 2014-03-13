@@ -11,6 +11,7 @@
 #include "TCanvas.h"
 #include <iostream>
 #include "TStyle.h"
+#include "TLegend.h"
 using namespace std;
 
 
@@ -53,6 +54,7 @@ TFile *in_file = TFile::Open("/../../lhcb/panasas/radiative/TupleProd/MC2012sim6
  my_chainBkG->AddFile("/../../lhcb/panasas/radiative/TupleProd/Data/2012/RADIATIVE/VVG/S20r0/MagDown/radiativeVVG_R14S20r0_MagDown_2_az_ntp.root");
 
 
+
  //Set Upper and Lower limit for the signal window (5186-5546 MeV for PhiPhi and KstKst(B0s Mass= 5366MeV), 5099-5459MeV for PhiKst(B0 Mass = 5279 MeV))
 
  float LowerLimit = 5186;
@@ -67,73 +69,73 @@ TFile *in_file = TFile::Open("/../../lhcb/panasas/radiative/TupleProd/MC2012sim6
                         100,//Number of bins
                         InputStartRange,//Lower X Boundary
                         InputStopRange);//Upper X Boundary
- hMaxKminuspiplusSig->SetLineColor(kBlue-6);
+ hMaxKminuspiplusSig->SetFillColor(kBlue-9);
 
  TH1F* hMaxKminuspiplusLBkG=new TH1F("MaxKminuspiplus","{Kminus,piplus} Max Pt",
                         100,//Number of bins
                         InputStartRange,//Lower X Boundary
                         InputStopRange);//Upper X Boundary
- hMaxKminuspiplusLBkG->SetLineColor(kMagenta+3);
+ hMaxKminuspiplusLBkG->SetLineColor(kBlue+1);
 
  TH1F* hMaxKminuspiplusHBkG=new TH1F("MaxKminuspiplus","{Kminus,piplus} Max Pt",
                         100,//Number of bins
                         InputStartRange,//Lower X Boundary
                         InputStopRange);//Upper X Boundary
- hMaxKminuspiplusHBkG->SetLineColor(kRed);
+ hMaxKminuspiplusHBkG->SetLineColor(kRed+1);
 
  TH1F* hMaxKpluspiminusSig=new TH1F("MaxKpluspiminus","{Kplus,piminus} Max Pt",
                         100,//Number of bins
                         InputStartRange,//Lower X Boundary
                         InputStopRange);//Upper X Boundary
- hMaxKpluspiminusSig->SetLineColor(kBlue-6);
+ hMaxKpluspiminusSig->SetFillColor(kBlue-9);
 
  TH1F* hMaxKpluspiminusLBkG=new TH1F("MaxKpluspiminus","{Kplus,piminus} Max Pt",
                         100,//Number of bins
                         InputStartRange,//Lower X Boundary
                         InputStopRange);//Upper X Boundary
- hMaxKpluspiminusLBkG->SetLineColor(kMagenta+3);
+ hMaxKpluspiminusLBkG->SetLineColor(kBlue+1);
 
  TH1F* hMaxKpluspiminusHBkG=new TH1F("MaxKpluspiminus","{Kplus,piminus} Max Pt",
                         100,//Number of bins
                         InputStartRange,//Lower X Boundary
                         InputStopRange);//Upper X Boundary
- hMaxKminuspiplusHBkG->SetLineColor(kRed);
+ hMaxKpluspiminusHBkG->SetLineColor(kRed+1);
 
  TH1F* hMaxSig=new TH1F("Max","Max Pt",
                         100,//Number of bins
                         InputStartRange,//Lower X Boundary
                         InputStopRange);//Upper X Boundary
- hMaxSig->SetLineColor(kBlue-6);
+ hMaxSig->SetFillColor(kBlue-9);
 
  TH1F* hMaxLBkG=new TH1F("Max","Max Pt",
                         100,//Number of bins
                         InputStartRange,//Lower X Boundary
                         InputStopRange);//Upper X Boundary
- hMaxLBkG->SetLineColor(kMagenta+3);
+ hMaxLBkG->SetLineColor(kBlue+1);
 
  TH1F* hMaxHBkG=new TH1F("Max","Max Pt",
                         100,//Number of bins
                         InputStartRange,//Lower X Boundary
                         InputStopRange);//Upper X Boundary
- hMaxHBkG->SetLineColor(kRed);
+ hMaxHBkG->SetLineColor(kRed+1);
 
  TH1F* hB_MMSig=new TH1F("B_MM","Mass;Mass (GeV);",
                         100,//Number of bins
                         4000,//Lower X Boundary
                         6500);//Upper X Boundary
- hB_MMSig->SetLineColor(kBlue-6);
+ hB_MMSig->SetFillColor(kBlue-9);
 
  TH1F* hB_MMLBkG=new TH1F("B_MM","Mass;Mass (GeV);",
                         100,//Number of bins
                         4000,//Lower X Boundary
                         6500);//Upper X Boundary
- hB_MMLBkG->SetLineColor(kMagenta+3);
+ hB_MMLBkG->SetLineColor(kBlue+1);
 
  TH1F* hB_MMHBkG=new TH1F("B_MM","Mass;Mass (GeV);",
                         100,//Number of bins
                         4000,//Lower X Boundary
                         6500);//Upper X Boundary
- hB_MMHBkG->SetLineColor(kRed);
+ hB_MMHBkG->SetLineColor(kRed+1);
 
  //Read Trees
 
@@ -203,6 +205,18 @@ TFile *in_file = TFile::Open("/../../lhcb/panasas/radiative/TupleProd/MC2012sim6
  
  cout<<"Number of entries for the Signal : "<<entrySig<<endl;
  cout<<"Number of entries for the BkG : "<<entryBkG<<endl;
+
+
+ TLegend *leg = new TLegend(0.6,0.7,0.89,0.89);
+ leg->AddEntry(hB_MMSig,"Signal","f"); 
+ leg->AddEntry(hB_MMLBkG,"Low BkG","l");
+ leg->AddEntry(hB_MMHBkG,"High BkG","l");
+ 
+ 
+
+ gStyle->SetOptStat(0);
+ 
+ 
  
  //Draw histogramms
 
@@ -211,28 +225,30 @@ TFile *in_file = TFile::Open("/../../lhcb/panasas/radiative/TupleProd/MC2012sim6
  cCanvas->Divide(2,2);
 
  cCanvas->cd(1);
- hMaxKminuspiplusLBkG->Scale(1/NumEntriesBkG);
- hMaxKminuspiplusLBkG->Draw();
- hMaxKminuspiplusHBkG->Scale(1/NumEntriesBkG);
- hMaxKminuspiplusHBkG->Draw("same");
- hMaxKminuspiplusSig->Scale(1/NumEntriesSig);
- hMaxKminuspiplusSig->Draw("same");
+ //hMaxKminuspiplusLBkG->Scale(1/NumEntriesBkG);
+ hMaxKminuspiplusSig->DrawNormalized();
+ //hMaxKminuspiplusHBkG->Scale(1/NumEntriesBkG);
+ hMaxKminuspiplusHBkG->DrawNormalized("same");
+ //hMaxKminuspiplusSig->Scale(1/NumEntriesSig);
+ hMaxKminuspiplusLBkG->DrawNormalized("same");
+ leg->Draw();
+ 
 
  cCanvas->cd(2);
- hMaxKpluspiminusLBkG->Scale(1/NumEntriesBkG);
- hMaxKpluspiminusLBkG->Draw();
- hMaxKpluspiminusHBkG->Scale(1/NumEntriesBkG);
- hMaxKpluspiminusHBkG->Draw("same");
- hMaxKpluspiminusSig->Scale(1/NumEntriesSig);
- hMaxKpluspiminusSig->Draw("same");
+ // hMaxKpluspiminusLBkG->Scale(1/NumEntriesBkG);
+ hMaxKpluspiminusSig->DrawNormalized();
+ //hMaxKpluspiminusHBkG->Scale(1/NumEntriesBkG);
+ hMaxKpluspiminusHBkG->DrawNormalized("same");
+ //hMaxKpluspiminusSig->Scale(1/NumEntriesSig);
+ hMaxKpluspiminusLBkG->DrawNormalized("same");
 
  cCanvas->cd(3);
- hMaxLBkG->Scale(1/NumEntriesBkG);
- hMaxLBkG->Draw();
- hMaxHBkG->Scale(1/NumEntriesBkG);
- hMaxHBkG->Draw("same");
- hMaxSig->Scale(1/NumEntriesSig);
- hMaxSig->Draw("same");
+ // hMaxLBkG->Scale(1/NumEntriesBkG);
+ hMaxSig->DrawNormalized();
+ //hMaxHBkG->Scale(1/NumEntriesBkG);
+ hMaxHBkG->DrawNormalized("same");
+ //hMaxSig->Scale(1/NumEntriesSig);
+ hMaxLBkG->DrawNormalized("same");
 
 
  cCanvas->cd(4);

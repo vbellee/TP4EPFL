@@ -11,6 +11,8 @@
 #include "TCanvas.h"
 #include <iostream>
 #include "TStyle.h"
+#include "TLegend.h"
+
 using namespace std;
 
 
@@ -53,6 +55,61 @@ TFile *in_file = TFile::Open("/../../lhcb/panasas/radiative/TupleProd/MC11a/2011
  my_chainBkG->AddFile("/../../lhcb/panasas/radiative/TupleProd/Data/2012/RADIATIVE/VVG/S20r0/MagDown/radiativeVVG_R14S20r0_MagDown_2_ay_ntp.root");
  my_chainBkG->AddFile("/../../lhcb/panasas/radiative/TupleProd/Data/2012/RADIATIVE/VVG/S20r0/MagDown/radiativeVVG_R14S20r0_MagDown_2_az_ntp.root");
 
+ my_chainBkG->AddFile("/../../lhcb/panasas/radiative/TupleProd/Data/2012/RADIATIVE/VVG/S20r0/MagDown/radiativeVVG_R14S20r0_MagDown_5_aa_ntp.root");
+ 
+ my_chainBkG->AddFile("/../../lhcb/panasas/radiative/TupleProd/Data/2012/RADIATIVE/VVG/S20r0/MagDown/radiativeVVG_R14S20r0_MagDown_5_ab_ntp.root");
+ 
+ my_chainBkG->AddFile("/../../lhcb/panasas/radiative/TupleProd/Data/2012/RADIATIVE/VVG/S20r0/MagDown/radiativeVVG_R14S20r0_MagDown_5_ac_ntp.root");
+ 
+ my_chainBkG->AddFile("/../../lhcb/panasas/radiative/TupleProd/Data/2012/RADIATIVE/VVG/S20r0/MagDown/radiativeVVG_R14S20r0_MagDown_5_ad_ntp.root");
+ 
+ my_chainBkG->AddFile("/../../lhcb/panasas/radiative/TupleProd/Data/2012/RADIATIVE/VVG/S20r0/MagDown/radiativeVVG_R14S20r0_MagDown_5_ae_ntp.root");
+ 
+ my_chainBkG->AddFile("/../../lhcb/panasas/radiative/TupleProd/Data/2012/RADIATIVE/VVG/S20r0/MagDown/radiativeVVG_R14S20r0_MagDown_5_af_ntp.root");
+ 
+ my_chainBkG->AddFile("/../../lhcb/panasas/radiative/TupleProd/Data/2012/RADIATIVE/VVG/S20r0/MagDown/radiativeVVG_R14S20r0_MagDown_5_ag_ntp.root");
+ 
+ my_chainBkG->AddFile("/../../lhcb/panasas/radiative/TupleProd/Data/2012/RADIATIVE/VVG/S20r0/MagDown/radiativeVVG_R14S20r0_MagDown_5_ah_ntp.root");
+ 
+ my_chainBkG->AddFile("/../../lhcb/panasas/radiative/TupleProd/Data/2012/RADIATIVE/VVG/S20r0/MagDown/radiativeVVG_R14S20r0_MagDown_5_ai_ntp.root");
+ 
+ my_chainBkG->AddFile("/../../lhcb/panasas/radiative/TupleProd/Data/2012/RADIATIVE/VVG/S20r0/MagDown/radiativeVVG_R14S20r0_MagDown_5_aj_ntp.root");
+ 
+ my_chainBkG->AddFile("/../../lhcb/panasas/radiative/TupleProd/Data/2012/RADIATIVE/VVG/S20r0/MagDown/radiativeVVG_R14S20r0_MagDown_5_ak_ntp.root");
+ 
+ my_chainBkG->AddFile("/../../lhcb/panasas/radiative/TupleProd/Data/2012/RADIATIVE/VVG/S20r0/MagDown/radiativeVVG_R14S20r0_MagDown_5_al_ntp.root");
+ 
+ my_chainBkG->AddFile("/../../lhcb/panasas/radiative/TupleProd/Data/2012/RADIATIVE/VVG/S20r0/MagDown/radiativeVVG_R14S20r0_MagDown_5_am_ntp.root");
+ 
+ my_chainBkG->AddFile("/../../lhcb/panasas/radiative/TupleProd/Data/2012/RADIATIVE/VVG/S20r0/MagDown/radiativeVVG_R14S20r0_MagDown_5_an_ntp.root");
+ 
+ my_chainBkG->AddFile("/../../lhcb/panasas/radiative/TupleProd/Data/2012/RADIATIVE/VVG/S20r0/MagDown/radiativeVVG_R14S20r0_MagDown_5_ao_ntp.root");
+ 
+ my_chainBkG->AddFile("/../../lhcb/panasas/radiative/TupleProd/Data/2012/RADIATIVE/VVG/S20r0/MagDown/radiativeVVG_R14S20r0_MagDown_5_ap_ntp.root");
+ 
+ my_chainBkG->AddFile("/../../lhcb/panasas/radiative/TupleProd/Data/2012/RADIATIVE/VVG/S20r0/MagDown/radiativeVVG_R14S20r0_MagDown_5_aq_ntp.root");
+ 
+ my_chainBkG->AddFile("/../../lhcb/panasas/radiative/TupleProd/Data/2012/RADIATIVE/VVG/S20r0/MagDown/radiativeVVG_R14S20r0_MagDown_5_ar_ntp.root");
+ 
+ my_chainBkG->AddFile("/../../lhcb/panasas/radiative/TupleProd/Data/2012/RADIATIVE/VVG/S20r0/MagDown/radiativeVVG_R14S20r0_MagDown_5_as_ntp.root");
+ 
+ my_chainBkG->AddFile("/../../lhcb/panasas/radiative/TupleProd/Data/2012/RADIATIVE/VVG/S20r0/MagDown/radiativeVVG_R14S20r0_MagDown_5_at_ntp.root");
+ 
+ my_chainBkG->AddFile("/../../lhcb/panasas/radiative/TupleProd/Data/2012/RADIATIVE/VVG/S20r0/MagDown/radiativeVVG_R14S20r0_MagDown_5_au_ntp.root");
+ 
+ my_chainBkG->AddFile("/../../lhcb/panasas/radiative/TupleProd/Data/2012/RADIATIVE/VVG/S20r0/MagDown/radiativeVVG_R14S20r0_MagDown_5_av_ntp.root");
+ 
+ my_chainBkG->AddFile("/../../lhcb/panasas/radiative/TupleProd/Data/2012/RADIATIVE/VVG/S20r0/MagDown/radiativeVVG_R14S20r0_MagDown_5_aw_ntp.root");
+ 
+ my_chainBkG->AddFile("/../../lhcb/panasas/radiative/TupleProd/Data/2012/RADIATIVE/VVG/S20r0/MagDown/radiativeVVG_R14S20r0_MagDown_5_ax_ntp.root");
+ 
+ my_chainBkG->AddFile("/../../lhcb/panasas/radiative/TupleProd/Data/2012/RADIATIVE/VVG/S20r0/MagDown/radiativeVVG_R14S20r0_MagDown_5_ay_ntp.root");
+ 
+ my_chainBkG->AddFile("/../../lhcb/panasas/radiative/TupleProd/Data/2012/RADIATIVE/VVG/S20r0/MagDown/radiativeVVG_R14S20r0_MagDown_5_az_ntp.root");
+ 
+
+
+
  //Set Lower and Upper Limit for mass
 
  float LowerLimit = 5099;
@@ -65,73 +122,73 @@ TFile *in_file = TFile::Open("/../../lhcb/panasas/radiative/TupleProd/MC11a/2011
                         100,//Number of bins
                         InputStartRange,//Lower X Boundary
                         InputStopRange);//Upper X Boundary
- hMaxKminusKplusSig->SetLineColor(kBlue-6);
+ hMaxKminusKplusSig->SetFillColor(kBlue-9);
 
  TH1F* hMaxKminusKplusLBkG=new TH1F("MaxKminusKplus","{Kminus,Kplus} Max Pt",
                         100,//Number of bins
                         InputStartRange,//Lower X Boundary
                         InputStopRange);//Upper X Boundary
- hMaxKminusKplusLBkG->SetLineColor(kMagenta+3);
+ hMaxKminusKplusLBkG->SetLineColor(kBlue+1);
 
  TH1F* hMaxKminusKplusHBkG=new TH1F("MaxKminusKplus","{Kminus,Kplus} Max Pt",
                         100,//Number of bins
                         InputStartRange,//Lower X Boundary
                         InputStopRange);//Upper X Boundary
- hMaxKminusKplusHBkG->SetLineColor(kRed);
+ hMaxKminusKplusHBkG->SetLineColor(kRed+1);
 
  TH1F* hMaxKplus0piminusSig=new TH1F("MaxKplus0piminus","{Kplus0,piminus} Max Pt",
                         100,//Number of bins
                         InputStartRange,//Lower X Boundary
                         InputStopRange);//Upper X Boundary
- hMaxKplus0piminusSig->SetLineColor(kBlue-6);
+ hMaxKplus0piminusSig->SetFillColor(kBlue-9);
 
  TH1F* hMaxKplus0piminusLBkG=new TH1F("MaxKplus0piminus","{Kplus0,piminus} Max Pt",
                         100,//Number of bins
                         InputStartRange,//Lower X Boundary
                         InputStopRange);//Upper X Boundary
- hMaxKplus0piminusLBkG->SetLineColor(kMagenta+3);
+ hMaxKplus0piminusLBkG->SetLineColor(kBlue+1);
 
  TH1F* hMaxKplus0piminusHBkG=new TH1F("MaxKplus0piminus","{Kplus0,piminus} Max Pt",
                         100,//Number of bins
                         InputStartRange,//Lower X Boundary
                         InputStopRange);//Upper X Boundary
- hMaxKminusKplusHBkG->SetLineColor(kRed);
+ hMaxKplus0piminusHBkG->SetLineColor(kRed+1);
 
  TH1F* hMaxSig=new TH1F("Max","Max Pt",
                         100,//Number of bins
                         InputStartRange,//Lower X Boundary
                         InputStopRange);//Upper X Boundary
- hMaxSig->SetLineColor(kBlue-6);
+ hMaxSig->SetFillColor(kBlue-9);
 
  TH1F* hMaxLBkG=new TH1F("Max","Max Pt",
                         100,//Number of bins
                         InputStartRange,//Lower X Boundary
                         InputStopRange);//Upper X Boundary
- hMaxLBkG->SetLineColor(kMagenta+3);
+ hMaxLBkG->SetLineColor(kBlue+1);
 
  TH1F* hMaxHBkG=new TH1F("Max","Max Pt",
                         100,//Number of bins
                         InputStartRange,//Lower X Boundary
                         InputStopRange);//Upper X Boundary
- hMaxHBkG->SetLineColor(kRed);
+ hMaxHBkG->SetLineColor(kRed+1);
 
  TH1F* hB_MMSig=new TH1F("B_MM","Mass;Mass (GeV);",
                         100,//Number of bins
                         4000,//Lower X Boundary
                         6500);//Upper X Boundary
- hB_MMSig->SetLineColor(kBlue-6);
+ hB_MMSig->SetFillColor(kBlue-9);
 
  TH1F* hB_MMLBkG=new TH1F("B_MM","Mass;Mass (GeV);",
                         100,//Number of bins
                         4000,//Lower X Boundary
                         6500);//Upper X Boundary
- hB_MMLBkG->SetLineColor(kMagenta+3);
+ hB_MMLBkG->SetLineColor(kBlue+1);
 
  TH1F* hB_MMHBkG=new TH1F("B_MM","Mass;Mass (GeV);",
                         100,//Number of bins
                         4000,//Lower X Boundary
                         6500);//Upper X Boundary
- hB_MMHBkG->SetLineColor(kRed);
+ hB_MMHBkG->SetLineColor(kRed+1);
 
  //Read Trees
 
@@ -201,6 +258,18 @@ TFile *in_file = TFile::Open("/../../lhcb/panasas/radiative/TupleProd/MC11a/2011
  
  cout<<"Number of entries for the Signal : "<<entrySig<<endl;
  cout<<"Number of entries for the BkG : "<<entryBkG<<endl;
+
+
+ TLegend *leg = new TLegend(0.6,0.7,0.89,0.89);
+ leg->AddEntry(hB_MMSig,"Signal","f"); 
+ leg->AddEntry(hB_MMLBkG,"Low BkG","l");
+ leg->AddEntry(hB_MMHBkG,"High BkG","l");
+ 
+ 
+
+ gStyle->SetOptStat(0);
+ 
+
  
  //Draw histogramms
 
@@ -209,28 +278,30 @@ TFile *in_file = TFile::Open("/../../lhcb/panasas/radiative/TupleProd/MC11a/2011
  cCanvas->Divide(2,2);
 
  cCanvas->cd(1);
- hMaxKminusKplusLBkG->Scale(1/NumEntriesBkG);
- hMaxKminusKplusLBkG->Draw();
- hMaxKminusKplusHBkG->Scale(1/NumEntriesBkG);
- hMaxKminusKplusHBkG->Draw("same");
- hMaxKminusKplusSig->Scale(1/NumEntriesSig);
- hMaxKminusKplusSig->Draw("same");
+ // hMaxKminusKplusLBkG->Scale(1/NumEntriesBkG);
+ hMaxKminusKplusSig->DrawNormalized();
+ //hMaxKminusKplusHBkG->Scale(1/NumEntriesBkG);
+ hMaxKminusKplusHBkG->DrawNormalized("same");
+ //hMaxKminusKplusSig->Scale(1/NumEntriesSig);
+ hMaxKminusKplusLBkG->DrawNormalized("same");
+ leg->Draw();
+
 
  cCanvas->cd(2);
- hMaxKplus0piminusLBkG->Scale(1/NumEntriesBkG);
- hMaxKplus0piminusLBkG->Draw();
- hMaxKplus0piminusHBkG->Scale(1/NumEntriesBkG);
- hMaxKplus0piminusHBkG->Draw("same");
- hMaxKplus0piminusSig->Scale(1/NumEntriesSig);
- hMaxKplus0piminusSig->Draw("same");
+ // hMaxKplus0piminusLBkG->Scale(1/NumEntriesBkG);
+ hMaxKplus0piminusSig->DrawNormalized();
+ //hMaxKplus0piminusHBkG->Scale(1/NumEntriesBkG);
+ hMaxKplus0piminusHBkG->DrawNormalized("same");
+ //hMaxKplus0piminusSig->Scale(1/NumEntriesSig);
+ hMaxKplus0piminusLBkG->DrawNormalized("same");
 
  cCanvas->cd(3);
- hMaxLBkG->Scale(1/NumEntriesBkG);
- hMaxLBkG->Draw();
- hMaxHBkG->Scale(1/NumEntriesBkG);
- hMaxHBkG->Draw("same");
- hMaxSig->Scale(1/NumEntriesSig);
- hMaxSig->Draw("same");
+ // hMaxLBkG->Scale(1/NumEntriesBkG);
+ hMaxSig->DrawNormalized();
+ //hMaxHBkG->Scale(1/NumEntriesBkG);
+ hMaxHBkG->DrawNormalized("same");
+ //hMaxSig->Scale(1/NumEntriesSig);
+ hMaxLBkG->DrawNormalized("same");
 
 
  cCanvas->cd(4);
