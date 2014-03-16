@@ -12,6 +12,8 @@
 #include <iostream>
 #include "TStyle.h"
 #include "TLegend.h"
+#include "THStack.h"
+
 using namespace std;
 
 
@@ -193,6 +195,7 @@ void PlotVariable (int Option,TString NameVariable, float InputStartRange, float
                         4000,//Lower X Boundary
                         6500);//Upper X Boundary
  hB_MMHBkG->SetLineColor(kRed+1);
+ 
 
  //Read Trees
 
@@ -261,17 +264,44 @@ void PlotVariable (int Option,TString NameVariable, float InputStartRange, float
  //Draw histogramms
 
 
+
+ THStack *hs = new THStack ("hs",TitleHisto.Data());
+ float NormSig ;
+ NormSig = 1/(hVariableSig->Integral());
+ hVariableSig->Scale(NormSig);
+ hs->Add(hVariableSig);
+
+ float NormLBkG;
+ 
+ NormLBkG = 1/(hVariableLBkG->Integral());
+ hVariableLBkG->Scale(NormLBkG);
+ hs->Add(hVariableLBkG);
+
+ float NormHBkG;
+ 
+ NormHBkG = 1/(hVariableHBkG->Integral());
+ hVariableHBkG->Scale(NormHBkG);
+ hs->Add(hVariableHBkG);
+
+
+ hs->Print();
+
  TCanvas* cCanvas = new TCanvas("cCanvas","Plots",0,0,1200,650);
  // cCanvas->Divide(2);
 
  cCanvas->cd(1);
- // hVariableLBkG->Scale(1/NumEntriesBkG);
- hVariableSig->DrawNormalized();
+ hs->Draw("nostack");
+ //hVariableSig->DrawNormalized("same");
+ //hVariableLBkG->DrawNormalized("same");
+  
+
+// hVariableLBkG->Scale(1/NumEntriesBkG);
+ // hVariableSig->DrawNormalized();
  // hVariableHBkG->Scale(1/NumEntriesBkG);
- hVariableHBkG->DrawNormalized("same");
+ //hVariableHBkG->DrawNormalized("same");
  // hVariableSig->Scale(1/NumEntriesSig);
- hVariableLBkG->DrawNormalized("same");
- leg->Draw();
+ //hVariableLBkG->DrawNormalized("same");
+ // leg->Draw("same");
  
  /*
  cCanvas->cd(2);
