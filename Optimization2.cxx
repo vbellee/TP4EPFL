@@ -1,3 +1,5 @@
+/*
+
 #ifndef __CINT__
 #include "RooGlobalFunc.h"
 #endif
@@ -32,6 +34,7 @@
 #include "THStack.h"
 #include "RooExponential.h"
 #include "TF1.h"
+*/
 
 using namespace RooFit;
 
@@ -82,16 +85,21 @@ void Optimization2(int Option,TString NameVariable, float LeftLowerBound, float 
   else if (Option == 2){
     in_fileSig = TFile::Open("/../../lhcb/panasas/radiative/TupleProd/MC11a/2011/Bd2PhiKstGamma/VVG/S20r1/Bd2PhiKstGamma_2011_S20r1_VVG.root");
     my_tupleSig = (TTree*) in_fileSig->GetObjectChecked("phikstGammaMCStrip/DecayTree","TTree");
-    in_fileBkG = TFile::Open("/../../lhcb/panasas/radiative/TupleProd/MC11a/2011/Bd2PhiKstGamma/VVG/S20r1/Bd2PhiKstGamma_2011_S20r1_VVG.root");
-    my_tupleBkG = (TTree*) in_fileBkG->GetObjectChecked("phikstGammaMCStrip/DecayTree","TTree");
+    in_fileBkG = TFile::Open("/../../lhcb/panasas/radiative/TupleProd/Data/CombinedOffline/RADIATIVE/VVG/S20rX/Bd2PhiKstGamma_PreSel.root");
+    my_tupleBkG = (TTree*) in_fileBkG->GetObjectChecked("phikstGammaStrip/DecayTree","TTree");
   }
 
   else if (Option == 3){
     in_fileSig = TFile::Open("/../../lhcb/panasas/radiative/TupleProd/MC11a/2011/Bs2PhiPhiGamma/VVG/S20r1/Bs2PhiPhiGamma_2011_S20r1_VVG.root");
     my_tupleSig = (TTree*) in_fileSig->GetObjectChecked("phiphiGammaMCStrip/DecayTree","TTree");
-    in_fileBkG = TFile::Open("/../../lhcb/panasas/radiative/TupleProd/MC11a/2011/Bs2PhiPhiGamma/VVG/S20r1/Bs2PhiPhiGamma_2011_S20r1_VVG.root");
-    my_tupleBkG = (TTree*) in_fileBkG->GetObjectChecked("phiphiGammaMCStrip/DecayTree","TTree");
+    in_fileBkG = TFile::Open("/../../lhcb/panasas/radiative/TupleProd/Data/CombinedOffline/RADIATIVE/VVG/S20rX/Bs2PhiPhiGamma_PreSel.root");
+    my_tupleBkG = (TTree*) in_fileBkG->GetObjectChecked("phiphiGammaStrip/DecayTree","TTree");
   }
+
+  cout<<"Number of events in signal : "<<my_tupleSig->GetEntries()<<endl;
+  cout<<"Number of events in BkG : "<<my_tupleBkG->GetEntries()<<endl;
+
+    
 
   //  assert ( in_fileSig && in_fileBkG && my_tupleSig && my_tupleBkG ) ;
   // Does not compile with this assert  
@@ -108,7 +116,8 @@ void Optimization2(int Option,TString NameVariable, float LeftLowerBound, float 
   float Efficiency = 0;  
   float NumEvtsBkG = 0;
   
-      
+
+        
   //Enter the loop (here we would need to reset everything...)
 
   for (int ix=0;ix<(LeftNumSteps+1);++ix) {
@@ -116,18 +125,25 @@ void Optimization2(int Option,TString NameVariable, float LeftLowerBound, float 
 
     //Define temporary Left cut
     float tmpLowerCut = LeftLowerBound + ix*LeftStep;
+    cout << "Temporary lower cut : "<<tmpLowerCut<<endl;
+    
 
+    
     for (int iy=0;iy<(RightNumSteps+1);++iy) {
       
 
       //Define temporary Right cut
       float tmpUpperCut = RightLowerBound + iy*RightStep;
+    cout << "Temporary upper cut : "<<tmpUpperCut<<endl;
 
+
+      
       //Define temporary chosen interval for the variable
       RooRealVar Variable("Variable",NameVariable.Data(),tmpLowerCut,tmpUpperCut);
       RooArgSet ntupleSetSig (SigMass,Variable);
       RooArgSet ntupleSetBkG (Mass,Variable);
-      
+
+            
       //Create Data sets for signal and BkG
       RooDataSet dataSetSig("dataSetSig","Data Set for Signal", my_tupleSig, ntupleSetSig);
       RooDataSet dataSetBkG("dataSetBkG","Data Set for BackGround", my_tupleBkG, ntupleSetBkG);
@@ -138,15 +154,17 @@ void Optimization2(int Option,TString NameVariable, float LeftLowerBound, float 
       RooRealVar tau_2 ("tau_2","tau_2 for LowBkG",-1.0,-10.0,0.0);
       
       //Define the two PDFs
-      RooExponential f1 ("f1","Fit of the High BkG",Mass,tau_1);
-      RooExponential f2 ("f2","Fit of the Low BkG",Mass,tau_2);
+      RooExponential f1 ("f1","Fit of the High BkG",Mass,tau_1,RooConst(1));
+      RooExponential f2 ("f2","Fit of the Low BkG",Mass,tau_2,RooConst(1));
 
       //Create total PDF (sum of f1 and f2)
-      RooAddPdf totalPdf("totalPdf","sum of BkG",RooArgList(f1,f2));
+      RooRealVar f("f","f",0.,1.) ;
+      RooAddPdf totalPdf("totalPdf","sum of BkG",RooArgList(f1,f2),f);
 
       //Fit High BkG
       f1.fitTo(dataSetBkG,Range("HBkG"));
 
+      /*
       //Fix the parmeter of f1
       tau_1.setConstant();
       
@@ -178,13 +196,13 @@ void Optimization2(int Option,TString NameVariable, float LeftLowerBound, float 
       
       
       
-
+      */
 
     }
-  
+    
   }
   
     cout<<"Optimized Figure of Merit : "<<FigMerit<<"\n"<<"LowerCut : "<<LowerCut<<"\n"<<"UpperCut : "<<UpperCut<<endl;
-  
+      
 
 }
