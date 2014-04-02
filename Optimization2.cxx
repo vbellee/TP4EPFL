@@ -6,6 +6,7 @@
 
 #include "RooRealVar.h"
 #include "RooAbsData.h"
+#include "RooAbsReal.h"
 #include "RooDataSet.h"
 #include "RooGaussian.h"
 #include "RooConstVar.h"
@@ -39,7 +40,7 @@ using namespace RooFit;
 using namespace std;
 
 //Optimization with SideOption = 0 for lower cuts and SideOption = 1 for upper cut on the variable
-void Optimization2(int Option,TString NameVariable, float LowerBound, float UpperBound, float NumSteps, int SideOption)
+void Optimization2(int Option,TString NameVariable,float StartVar, float EndVar, float LowerBound, float UpperBound, float NumSteps, int SideOption)
 {
   
 
@@ -195,7 +196,7 @@ void Optimization2(int Option,TString NameVariable, float LowerBound, float Uppe
   
 
   //Create datasets
-  RooRealVar Variable(NameVariable.Data(),NameVariable.Data(),0,10);
+  RooRealVar Variable(NameVariable.Data(),NameVariable.Data(),StartVar,EndVar);
   
   RooArgSet ntupleSet(B_MM,Variable);
   
@@ -292,10 +293,12 @@ void Optimization2(int Option,TString NameVariable, float LowerBound, float Uppe
       
       }
       
+      if(ix==0){
+        
       // Plot Pdf over data
       RooPlot* frame = B_MM.frame() ;
       dataSetBkG_Cut->plotOn(frame) ;
-      gauss.plotOn(frame,Range("FullBkG"));
+      gauss.plotOn(frame,Range("LBkG,HBkG"),Normalization( 1.0,RooAbsReal::Relative));
       
       //totalPdf.plotOn(frame) ;
 
@@ -303,6 +306,7 @@ void Optimization2(int Option,TString NameVariable, float LowerBound, float Uppe
       //      f1.plotOn(frame);
       
       frame->Draw();
+      }
       
 
     
