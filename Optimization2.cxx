@@ -95,13 +95,12 @@ void Optimization2(int Option,TString NameVariable, float LowerBound, float Uppe
   //Open files for signal depending on the option (1 for KstKst, 2 for PhiKst, 3 for PhiPhi)
 
   if (Option == 1){
-
-    //Name of Files to be modified    
-    in_fileSig = TFile::Open("/../../lhcb/panasas/radiative/TupleProd/MC2012sim6b/2012/Bs2KstKstGamma/VVG/S20r0/Bs2KstKstGamma_2012_S20r0_VVG.root");
+    
+    in_fileSig = TFile::Open("/../../lhcb/panasas/radiative/TupleProd/MC2012sim6b/2012/Bs2KstKstGamma/VVG/S20r0/Bs2KstKstGamma_VVG_Bs2KstKstGamma_PreSel.root");
     
     my_tupleSig = (TTree*) in_fileSig->GetObjectChecked("kstkstGammaMCStrip/DecayTree","TTree");
     
-    in_fileBkG = TFile::Open("/../../lhcb/panasas/radiative/TupleProd/MC2012sim6b/2012/Bs2KstKstGamma/VVG/S20r0/Bs2KstKstGamma_2012_S20r0_VVG.root");
+    in_fileBkG = TFile::Open("/../../lhcb/panasas/radiative/TupleProd/Data/CombinedOffline/RADIATIVE/VVG/S20rX/Bs2KstKstGamma_PreSel.root");
     
     my_tupleBkG = (TTree*) in_fileBkG->GetObjectChecked("kstkstGammaMCStrip/DecayTree","TTree");
     
@@ -110,7 +109,7 @@ void Optimization2(int Option,TString NameVariable, float LowerBound, float Uppe
 
   else if (Option == 2){
     
-    in_fileSig = TFile::Open("/../../lhcb/panasas/radiative/TupleProd/MC11a/2011/Bd2PhiKstGamma/VVG/S20r1/Bd2PhiKstGamma_2011_S20r1_VVG.root");
+    in_fileSig = TFile::Open("/../../lhcb/panasas/radiative/TupleProd/MC11a/2011/Bd2PhiKstGamma/VVG/S20r1/Bd2PhiKstGamma_VVG_Bd2PhiKstGamma_PreSel.root");
     
     my_tupleSig = (TTree*) in_fileSig->GetObjectChecked("phikstGammaMCStrip/DecayTree","TTree");
     
@@ -123,7 +122,7 @@ void Optimization2(int Option,TString NameVariable, float LowerBound, float Uppe
 
   else if (Option == 3){
     
-    in_fileSig = TFile::Open("/../../lhcb/panasas/radiative/TupleProd/MC11a/2011/Bs2PhiPhiGamma/VVG/S20r1/Bs2PhiPhiGamma_2011_S20r1_VVG.root");
+    in_fileSig = TFile::Open("/../../lhcb/panasas/radiative/TupleProd/MC11a/2011/Bs2PhiPhiGamma/VVG/S20r1/Bs2PhiPhiGamma_VVG_Bs2PhiPhiGamma_PreSel.root");
     
     my_tupleSig = (TTree*) in_fileSig->GetObjectChecked("phiphiGammaMCStrip/DecayTree","TTree");
     
