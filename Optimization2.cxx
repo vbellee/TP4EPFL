@@ -163,9 +163,21 @@ void Optimization2(int Option,TString NameVariable, float LowerBound, float Uppe
 
   //Now we'll fit the Background with two exponentials
   //First, define the parameters
-  RooRealVar tau_1 ("tau_1","tau_1 for HighBkG",-1.0,-10.0,0.0);
+  RooRealVar tau_1 ("tau_1","tau_1 for HighBkG",-0.001,-0.01,0.0);
   
-  RooRealVar tau_2 ("tau_2","tau_2 for LowBkG",-1.0,-10.0,0.0);
+  RooRealVar tau_2 ("tau_2","tau_2 for LowBkG",-0.001,-0.01,0.0);
+  
+  // --- Parameters ---
+  RooRealVar sigmean("sigmean","Mean value",4200,3000,4500) ;
+  
+  RooRealVar sigwidth("sigwidth","Width",2000,100,4500) ;
+  
+ 
+  // --- Build Gaussian PDF ---
+  RooGaussian gauss("gauss","signal PDF",B_MM,sigmean,sigwidth) ;
+  
+
+  //  RooRealVar poly_c1("poly_c1", "coefficient of x^1 term", 0,-10,10);
   
 
   //Define the two PDFs
@@ -173,11 +185,13 @@ void Optimization2(int Option,TString NameVariable, float LowerBound, float Uppe
   
   RooExponential f2 ("f2","Fit of the Low BkG",B_MM,tau_2);
   
+  //  RooPolynomial bkgd_poly("bkgd_poly", "linear function for background",B_MM, RooArgList(poly_c1));
+  
 
   //Create total PDF (sum of f1 and f2)
   RooRealVar f("f","f",0.,1.) ;
   
-  RooAddPdf totalPdf("totalPdf","sum of BkG",RooArgList(f1,f2),f);
+  RooAddPdf totalPdf("totalPdf","sum of BkG",RooArgList(f1,gauss),f);
   
 
   //Create datasets
@@ -261,18 +275,22 @@ void Optimization2(int Option,TString NameVariable, float LowerBound, float Uppe
       RooDataSet *dataSetBkG_Cut = (RooDataSet*)dataSetBkG.reduce(RooArgSet(B_MM,Variable),CutString.Data());
 
       cout<<dataSetBkG_Cut->sumEntries()<<endl;
-      /*                                 
+      /*                                       
       //Fit High BkG
       f1.fitTo(*dataSetBkG_Cut,Range("HBkG"));
-      
 
+      
+      
       
       //Fix the parmeter of f1
       tau_1.setConstant();
-
+      */
       //Fit all sidebands with totalPdF
-      totalPdf.fitTo(*dataSetBkG_Cut,Range("HBkG,LBkG"));
+      //totalPdf.fitTo(*dataSetBkG_Cut,Range("HBkG,LBkG"));
     
+      gauss.fitTo(*dataSetBkG_Cut,Range("HBkG,LBkG"));
+    
+
       //Compute the integral of the total Pdf
       RooAbsReal* igx = totalPdf.createIntegral(B_MM) ;
       NumEvtsBkG = igx->getVal();
@@ -290,18 +308,21 @@ void Optimization2(int Option,TString NameVariable, float LowerBound, float Uppe
         cout<<"Changed Lower Cut to :"<<Cut<<endl;
       
       }
-      */
+      
       // Plot Pdf over data
       RooPlot* frame = B_MM.frame() ;
       dataSetBkG_Cut->plotOn(frame) ;
+      gauss.plotOn(frame,Range("FullBkG"));
+      
       //totalPdf.plotOn(frame) ;
-    
+
+
+      //      f1.plotOn(frame);
+      
       frame->Draw();
       
 
     
-      delete dataSetSig_Cut;
-      delete dataSetBkG_Cut;
       
                 
     
