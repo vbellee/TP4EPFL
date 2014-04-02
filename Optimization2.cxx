@@ -95,7 +95,8 @@ void Optimization2(int Option,TString NameVariable, float LowerBound, float Uppe
   //Open files for signal depending on the option (1 for KstKst, 2 for PhiKst, 3 for PhiPhi)
 
   if (Option == 1){
-    
+
+    //Name of Files to be modified    
     in_fileSig = TFile::Open("/../../lhcb/panasas/radiative/TupleProd/MC2012sim6b/2012/Bs2KstKstGamma/VVG/S20r0/Bs2KstKstGamma_2012_S20r0_VVG.root");
     
     my_tupleSig = (TTree*) in_fileSig->GetObjectChecked("kstkstGammaMCStrip/DecayTree","TTree");
@@ -240,25 +241,7 @@ void Optimization2(int Option,TString NameVariable, float LowerBound, float Uppe
 
 
     
-    
-      //Create Title for the histogramms of the considered variable
-    
-      /*
-        char comp[10];
-    
-        if (SideOption == 1){
-      
-        sprintf (comp,"< %f", tmpCut);
-        }
-        else if (SideOption ==0){
-        sprintf (comp,"> %f", tmpCut);
-        } 
-    
-    
-        TString CutString = TString ((NameVariable.Data()) + comp ;
- 
-        
-      */   
+      //Creates Cuts for BkG
 
       TString CutString = (NameVariable.Data());
       if (SideOption == 1){      
@@ -273,6 +256,7 @@ void Optimization2(int Option,TString NameVariable, float LowerBound, float Uppe
 
 
       RooDataSet *dataSetBkG_Cut = (RooDataSet*)dataSetBkG.reduce(RooArgSet(B_MM,Variable),CutString.Data());
+
 
       cout<<dataSetBkG_Cut->sumEntries()<<endl;
       /*                                       
