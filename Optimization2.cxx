@@ -293,7 +293,7 @@ void Optimization2(int Option,TString NameVariable,float StartVar, float EndVar,
       
       }
       
-      if(ix==0){
+      if(ix==1){
         
       // Plot Pdf over data
       RooPlot* frame = B_MM.frame() ;
