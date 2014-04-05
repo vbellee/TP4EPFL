@@ -14,6 +14,8 @@
 #include "RooAddPdf.h"
 #include "RooPolynomial.h"
 #include "TCanvas.h"
+#include "TGraphErrors.h"
+//#include "TArrayF.h"
 #include "TAxis.h"
 #include "RooPlot.h"
 #include "RooFitResult.h"
@@ -49,6 +51,8 @@ void Optimization2(int Option,TString NameVariable,float StartVar, float EndVar,
   float LowerLimit = 5186;
   
   float UpperLimit = 5546;
+
+  float SizeBin = (UpperBound-LowerBound)/NumSteps ;
   
 
   if (Option == 2){
@@ -135,28 +139,37 @@ void Optimization2(int Option,TString NameVariable,float StartVar, float EndVar,
   //  assert ( in_fileSig && in_fileBkG && my_tupleSig && my_tupleBkG ) ;
   // Does not compile with this assert
 
+  //Initialize Cut
+  TString TextCut ;
+  
+
   //Define steps
   float Step = (UpperBound-LowerBound)/NumSteps;
 
   //Number of events in the signal MC
   float NSig = 1 ;
+  TString DecayName ;
+  
   
   if (Option == 1){
     
     NSig = 2041489;
+    DecayName = ("KstKstG");
     
   }
 
   else if (Option == 2){
     
     NSig = 506496;
-    
+    DecayName = ("PhiKstG");
+        
   }
 
   else if (Option == 3){
     
     NSig = 507997;
-    
+    DecayName = ("PhiPhiG");
+        
   }
 
 
@@ -219,7 +232,7 @@ void Optimization2(int Option,TString NameVariable,float StartVar, float EndVar,
 
   cout<<dataSetBkG->sumEntries()<<endl;
   
-
+  
   char smass[60];
   
   char sbkg[60];
@@ -237,6 +250,7 @@ void Optimization2(int Option,TString NameVariable,float StartVar, float EndVar,
   TString CutBkg = sbkg;
   
   cout <<CutBkg.Data()<<endl;
+
   
 
   RooDataSet *dataSetSig_Cut = (RooDataSet*)dataSetSig->reduce(ntupleSet,CutSignal.Data());
@@ -251,8 +265,33 @@ void Optimization2(int Option,TString NameVariable,float StartVar, float EndVar,
   cout<<dataSetSig_Cut->sumEntries()<<endl;
   
 
+  //Prints only the number of entries
+  gStyle->SetOptStat("");
   
-    
+
+  int NumBins = NumSteps + 1;
+  
+
+  //Creates Arrays for tmpCuts,tmpFigureOfMerits, and errors
+  Float_t tmpCuts[NumBins];
+  Float_t tmpFoMs[NumBins];
+  Float_t tmpCutsErrors[NumBins];
+  Float_t tmpFoMsErrors[NumBins];
+
+  //Creates part of the title for graph
+  TString SideCut ;
+  
+  if (SideOption==0){
+    SideCut = ("Lower cut on ");    
+  }
+  else if (SideOption==1){
+    SideCut = ("Upper cut on "); 
+  }
+  
+  
+
+  //  TH1F* hFoM = new TH1F ("hFoM",TString("Figure Of Merit vs cut on ")+NameVariable.Data(),NumBins,LowerBound,UpperBound);
+  
 
 
     //Enter the loop (here we would need to reset everything...)
@@ -269,9 +308,10 @@ void Optimization2(int Option,TString NameVariable,float StartVar, float EndVar,
       cout << "Temporary cut : "<<tmpCut<<endl;
       
 
-      //Creates Cuts for BkG
+      //Creates Cuts for BkG and Fills Side of cut
 
       TString CutString = (NameVariable.Data());
+      
       
       if (SideOption == 1){
         
@@ -317,12 +357,30 @@ void Optimization2(int Option,TString NameVariable,float StartVar, float EndVar,
       NumEvtsBkG = igx->getVal();
       
       //Be careful ! Here the efficiency is computed as NumEvts in the massWindow and inside the cuts over the total num of events in the tree (not only in mass window)
-      Efficiency = dataSetSig_Cut->sumEntries(CutString.Data())/NSig;
+
+      float NumSelectedSignal = dataSetSig_Cut->sumEntries(CutString.Data());
       
 
-      //Compute TemporaryFigure of merit
-      float tmpFigMerit = Efficiency / sqrt(NumEvtsBkG);
+      Efficiency = NumSelectedSignal/NSig;
       
+      cout<<"Number of Selected events in Signal after cut : "<<NumSelectedSignal<<endl;
+      
+      //Compute TemporaryFigure of merit for a search at 5 sigma
+      float tmpFigMerit = Efficiency / (5/2+sqrt(NumEvtsBkG));
+      float tmpFigMeritError = tmpFigMerit*sqrt(1/NumSelectedSignal
+                                                +1/(4*(5/2+sqrt(NumEvtsBkG))*(5/2+sqrt(NumEvtsBkG))));
+      
+      
+      //Fill hFoG with the temporary figure of merit
+      //      gFoM->SetPoint(ix,tmpCut,tmpFigMerit,SizeBin,tmpFigMeritError);
+      
+      //Fill arrays
+      tmpCuts[ix]=tmpCut;
+      tmpFoMs[ix]=tmpFigMerit;
+      tmpCutsErrors[ix]=SizeBin/2;
+      tmpFoMsErrors[ix]=tmpFigMeritError;
+
+
 
       //Replace FigOfMerit and Cuts if the tmpFigOfMerit is better than FigOfMerit
       if (tmpFigMerit>FigMerit){
@@ -334,6 +392,8 @@ void Optimization2(int Option,TString NameVariable,float StartVar, float EndVar,
         cout<<"Changed figure of merit to :"<<FigMerit<<endl;
         
         cout<<"Changed Lower Cut to :"<<Cut<<endl;
+        
+        TextCut = CutString;
         
         
       }
@@ -358,8 +418,9 @@ void Optimization2(int Option,TString NameVariable,float StartVar, float EndVar,
       //      f1.plotOn(frame);
 
       frame->Draw();
+
       
-      canvas->SaveAs(CutString+TString(".eps")) ;
+      canvas->SaveAs(TString("../Optimization/")+DecayName+TString("_")+CutString+TString(".eps")) ;
       
       delete canvas ;
       
@@ -374,8 +435,54 @@ void Optimization2(int Option,TString NameVariable,float StartVar, float EndVar,
 
 
     cout<<"Optimized Figure of Merit : "<<FigMerit<<"\n"<<"Cut : "<<Cut<<endl;
+
+    //Plot the histogram of figures of merit
+    TCanvas *cFoM = new TCanvas() ;
+    
+    cFoM->SetGrid();
     
     
+
+    for (int i=0;i<NumBins;i++) {
+      tmpFoMs[i] *= 1/FigMerit;
+
+      //---------BE-CAREFUL------------Errors on FoM reduced artificially !!!
+      tmpFoMsErrors[i] *= 1/(10*FigMerit);
+    }
+    
+//Creates the histogramm for Fig of Merit
+      TGraphErrors* gFoM = new TGraphErrors(NumBins,tmpCuts,tmpFoMs,tmpCutsErrors,tmpFoMsErrors);
+  gFoM->SetLineColor(kBlue-5);
+  
+  gFoM->SetLineWidth(1);
+  
+  gFoM->SetMarkerColor(kBlue+3);
+  
+  gFoM->SetMarkerStyle(33);
+
+  gFoM->SetMarkerSize(2);
+  
+  gFoM->SetTitle("");
+
+
+
+      gFoM->GetXaxis()->SetTitle(SideCut+NameVariable);
+
+      gFoM->GetXaxis()->SetTitleOffset(1.3);
+
+      gFoM->GetXaxis()->CenterTitle();
+  
+      gFoM->GetYaxis()->SetTitle("Punzi F.O.M. [A.U.]");
+
+      gFoM->GetYaxis()->SetTitleOffset(1.3);
+  
+      gFoM->GetYaxis()->CenterTitle();
+
+      gFoM->Draw("ALP");
+      
+      
+      cFoM->SaveAs(TString("../Optimization/")+DecayName+TString("_FoM_")+NameVariable+TString(".eps")) ;
+
   
 
   
