@@ -509,7 +509,7 @@ void Optimization2(RooDataSet*dataSetSig,RooDataSet*dataSetBkG,int Option,TStrin
     
 
     //Fix the parmeter of f1
-    //    tau_1.setConstant();
+        tau_1.setConstant();
     
           
     //Fit all sidebands with totalPdF
@@ -547,7 +547,7 @@ void Optimization2(RooDataSet*dataSetSig,RooDataSet*dataSetBkG,int Option,TStrin
       
       
     //Fill hFoG with the temporary figure of merit
-    // gFoM->SetPoint(ix,tmpCut,tmpFigMerit,SizeBin,tmpFigMeritError);
+    //     gFoM->SetPoint(ix,tmpCut,tmpFigMerit,SizeBin,tmpFigMeritError);
       
     //Fill arrays
     tmpCuts[ix]=tmpCut;
@@ -583,44 +583,6 @@ void Optimization2(RooDataSet*dataSetSig,RooDataSet*dataSetBkG,int Option,TStrin
       
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Plotting
-    TCanvas *Ccanvas = new TCanvas() ;
-    
-      
-    // Plot Pdf over data
-    RooPlot* Cframe = B_MM.frame() ;
-    
-      
-    dataSetBkG_Cut_Sel->plotOn(Cframe) ;
-    
-      
-    int CnBkg = dataSetBkG_Cut_Sel->sumEntries() ;
-    
-      
-    f1.plotOn(Cframe, Range("LBkG,HBkG"), Normalization(CnBkg, RooAbsReal::NumEvent));
-    //totalPdf.plotOn(frame, Range("LBkG,HBkG"),Normalization(nBkg, RooAbsReal::NumEvent),Components(gauss),LineStyle(kDashed),LineColor(kMagenta));
-    //totalPdf.plotOn(frame, Range("LBkG,HBkG"),Normalization(nBkg, RooAbsReal::NumEvent),Components(gauss),LineStyle(kDashed),LineColor(kGreen));
-    
-      
-
-    Cframe->Draw();
-    
-
-      
-    Ccanvas->SaveAs(TString("../Optimization/")+DecayName+TString("_ExponentialBkG_")+CutString+TString(".eps")) ;
-    
-      
-    delete Ccanvas ;
-    
-      
-    delete Cframe ;
-
-
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -641,7 +603,7 @@ void Optimization2(RooDataSet*dataSetSig,RooDataSet*dataSetBkG,int Option,TStrin
     
       
     totalPdf.plotOn(frame, Range("LBkG,HBkG"), Normalization(nBkg, RooAbsReal::NumEvent));
-    totalPdf.plotOn(frame, Range("LBkG,HBkG"),Normalization(nBkg, RooAbsReal::NumEvent),Components(gauss),LineStyle(kDashed),LineColor(kMagenta));
+    totalPdf.plotOn(frame, Range("LBkG,HBkG"),Normalization(nBkg, RooAbsReal::NumEvent),Components(f1),LineStyle(kDashed),LineColor(kMagenta));
     totalPdf.plotOn(frame, Range("LBkG,HBkG"),Normalization(nBkg, RooAbsReal::NumEvent),Components(gauss),LineStyle(kDashed),LineColor(kGreen));
     
       
